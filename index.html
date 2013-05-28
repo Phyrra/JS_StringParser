@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="parser.js"></script>
+	
+		<style>
+			.parameter {
+				display: none;
+			}
+		</style>
+	
+		<script>			
+			$(document).ready(function() {
+				$('#res').html(stringParser($('#calc').val()));
+				
+				$('#calc').on('change', function() {
+					$('#res').html(stringParser($(this).val()));
+				});
+			});
+		</script>
+	</head>
+	
+	<body>
+		<div>
+			<h1>JS Parser Test</h1>
+			
+			<p>Calculation</p>
+			<input type="text" id="calc" value="1 + 2 * (-3) / sin($'#param1')" size="100" />
+			
+			<p>Result</p>
+			<p id="res"></p>
+			
+			<div class="parameter" id="param1">17</div>
+		</div>
+		
+		<div id="debug"></div>
+	</body>
+</html>
