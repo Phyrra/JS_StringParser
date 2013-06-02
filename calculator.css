@@ -1,0 +1,42 @@
+.row {
+	display: table-row;
+	
+	line-height: 48px;
+}
+
+.cell {
+	display: table-cell;
+	
+	height: 48px;
+	width: 96px;
+	
+	vertical-align: middle;
+}
+
+.button {
+	width: 90%;
+	height: 90%;
+	
+	font-size: 22px;
+	
+	text-align: center;
+	vertical-align: middle;
+	
+	color: black;
+	background-color: #F8F8F8;
+	border: 1px solid #E5E5E5;
+}
+
+#calc_tmp {
+	color: grey;
+	width: 665px;
+	
+	text-align: right;
+}
+
+#calc_input {
+	width: 665px;
+	font-size: 24px;
+	
+	text-align: right;
+}
