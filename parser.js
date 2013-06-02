@@ -6,6 +6,18 @@ var stringParser = (function(s, xGrammar) {
 			// but then only the right part has to be taken, and the numbers will not be recognized afterwards..
 		},
 		
+		'CONSTANT': {
+			literal: '(e|pi)',
+			
+			'e': function() {
+				return Math.E;
+			},
+			
+			'pi': function() {
+				return Math.PI;
+			}
+		},
+		
 		'OPERATOR': {
 			literal: '[+|\\-|*|\\/|\\^|%|!|\\(|\\)|,]',
 			
@@ -172,6 +184,7 @@ var stringParser = (function(s, xGrammar) {
 	}
 	
 	var tokenizer = function(code) {
+		code = code.toLowerCase();
 		var axCode = [];
 
 		while (code.length > 0) {
@@ -185,7 +198,7 @@ var stringParser = (function(s, xGrammar) {
 						matchFound = true;
 						
 						// CHEAT FOR NEGATIVE NUMBERS
-						if (key == 'NUMERIC') {
+						if (key == 'NUMERIC' || key == 'VARIABLE' || key == 'CONSTANT') {
 							if (match[0].charAt(0) == '-') {
 								if (axCode.length == 0) {
 									// OK
@@ -231,7 +244,10 @@ var stringParser = (function(s, xGrammar) {
 			// VARIABLES
 			} else if (xToken.match(xGrammar['VARIABLE'].regexp)) {
 				axOutput.push(xGrammar['VARIABLE'].fnc(xToken));
-		
+				
+			} else if (xToken.match(xGrammar['CONSTANT'].regexp)) {
+				axOutput.push(xGrammar['CONSTANT'][xToken]());
+				
 			// FUNCTIONS
 			} else if (xToken.match(xGrammar['FUNCTION'].regexp)) {
 				axStack.push(xToken);
