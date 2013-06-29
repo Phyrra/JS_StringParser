@@ -86,7 +86,7 @@ var stringParser = (function(s, xGrammar) {
 		},
 		
 		'FUNCTION': {
-			literal: '(sin|cos|tan|asin|acos|atan[2]?|sqrt|exp|log|abs|max|min)',
+			literal: '(sin|cos|tan|asin|acos|atan[2]?|sqrt|exp|log|ln|abs|max|min)',
 			
 			'sin': {
 				nop: 1,
@@ -129,6 +129,11 @@ var stringParser = (function(s, xGrammar) {
 			},
 			
 			'log': {
+				nop: 1,
+				fnc: function(a) { return Math.log(a[0]) / Math.LN10; }
+			},
+			
+			'ln': {
 				nop: 1,
 				fnc: function(a) { return Math.log(a[0]); }
 			},

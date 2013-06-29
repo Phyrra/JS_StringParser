@@ -57,8 +57,11 @@ var calculator = function(divId) {
 			},
 			{
 				disp: 'ln',
+				alt: 'log',
 				fnc: function() {
-					$('#calc_input').val($('#calc_input').val() + 'ln(');
+					var self = $(this);
+					
+					$('#calc_input').val($('#calc_input').val() + self.html() + '(');
 				}
 			},
 			{
