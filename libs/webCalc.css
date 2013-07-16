@@ -1,0 +1,21 @@
+.webCalc {
+	border-collapse: collapse;
+}
+	
+.row {
+	display: table-row;
+}
+
+.cell {
+	display: table-cell;
+
+	width: 32px;
+	height: 16px;
+
+	border: 1px solid #CCCCCC;
+}
+
+.webCalcDescr {
+	color: #CCCCCC;
+	text-align: center;
+}

@@ -11,10 +11,10 @@
 	
 		<script>			
 			$(document).ready(function() {
-				$('#res').html(stringParser($('#calc').val()));
+				$('#res').html(parser($('#calc').val()));
 				
 				$('#calc').on('change', function() {
-					$('#res').html(stringParser($(this).val()));
+					$('#res').html(parser($(this).val()));
 				});
 			});
 		</script>

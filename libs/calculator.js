@@ -244,7 +244,7 @@ var calculator = function(divId) {
 					var calc = $('#calc_input').val();
 					$('#calc_tmp').html(calc);
 					
-					$('#calc_input').val(stringParser(calc));
+					$('#calc_input').val(parser(calc));
 				}
 			},
 			{

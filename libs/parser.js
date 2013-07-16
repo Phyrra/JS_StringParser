@@ -1,9 +1,15 @@
-var stringParser = (function(s, xGrammar) {
-	var xGrammarDefault = {
+var parser = (function() {
+	var isNumber = function(a) {
+		return !isNaN(parseFloat(a)) && isFinite(a);	
+	};
+	
+	var xGrammar = {
 		'NUMERIC': {
-			literal: '(\\-)?([0-9]+(\\.)?[0-9]*|\\.[0-9]+)'
+			literal: '(\\-)?([0-9]+(\\.)?[0-9]*|\\.[0-9]+)',
 			// -> ([+|\-|*|\/|\^|%|!|\(|\|,]\s*\-)?([0-9]+(\.)?[0-9]*|\.[0-9]+)
 			// but then only the right part has to be taken, and the numbers will not be recognized afterwards..
+			
+			isNumber: isNumber
 		},
 		
 		'CONSTANT': {
@@ -165,7 +171,15 @@ var stringParser = (function(s, xGrammar) {
 			fnc: function(a) {
 				var el = $(a.substring(2, a.length - 1));
 				
-				var val = el.html();
+				var tag = el.prop('tagName').toLowerCase();
+				
+				var val;
+				if (tag == 'input') {
+					val = el.val();
+				} else {
+					val = el.html();
+				}
+				
 				if (isNumber(val)) {
 					return parseFloat(val);
 				} else {
@@ -174,19 +188,11 @@ var stringParser = (function(s, xGrammar) {
 			}
 		}
 	};
-	
-	if (typeof xGrammar == 'undefined') {
-		xGrammar = xGrammarDefault;
-	}
-	
+
 	var axRegexp = [];
 	$.each(xGrammar, function(key, value) {
 		xGrammar[key].regexp = new RegExp('^' + value.literal);
 	});
-	
-	var isNumber = function(a) {
-		return !isNaN(parseFloat(a)) && isFinite(a);	
-	}
 	
 	var tokenizer = function(code) {
 		code = code.toLowerCase();
@@ -233,7 +239,7 @@ var stringParser = (function(s, xGrammar) {
 		}
 		
 		return axCode;
-	}
+	};
 
 	var shuntingYard = function(axCalc) {
 		var axOutput = [];
@@ -341,7 +347,7 @@ var stringParser = (function(s, xGrammar) {
 		}
 		
 		return axOutput;
-	}
+	};
 
 	var polnishCalc = function(axOutput) {
 		/*for(var i = 0; i < axOutput.length; i++) {
@@ -387,30 +393,32 @@ var stringParser = (function(s, xGrammar) {
 		}
 		
 		return axOutput[0];
-	}
+	};
 
-	return polnishCalc(
-		shuntingYard(
-			tokenizer(s)
-		)
-	);
+	return {
+		parse: function(s) {
+			return polnishCalc(
+				shuntingYard(
+					tokenizer( s )
+				)
+			);
+		},
+		
+		getDependencies: function(s) {
+			var axToken = tokenizer(s);
+			var axResult = [];
+			
+			for (var i = 0; i < axToken.length; i++) {
+				var xToken = axToken[i];
+				
+				if (xToken.match(xGrammar['VARIABLE'].regexp)) {
+					axResult.push(xToken.substring(2, xToken.length - 1));
+				}
+			}
 
-	/* TEST 1 */
-	/*
-	var res = polnishCalc(
-		shuntingYard([
-			'3', '+', '2', '*', 'sin', '(', '3', '*', '3', '+', '2', '*', '2', '^', '2', '+', '1', '*', '3', '!', ')', '*', '4', '-', '3', '*', 'sin', '(', '2', ')', '-', '3', '+', '4', '*', 'atan2', '(', '2', '*', '(', '5', '*', '2', '+', '3', ')', ',', '3', '*', '2', '+',  '1', ')', '+', '3', '*', '2'
-		])
-	);
-	*/
-
-	/* TEST 2 */
-	/*
-	var s = '3+2*sin(3*3+2*2^2+1*3!)*4-3*sin(2)-3+4*atan2(2*5+3,3*2+1)+3*2';
-	var res = polnishCalc(
-		shuntingYard(
-			tokenizer(s)
-		)
-	);
-	*/
-});
+			return axResult;
+		},
+		
+		grammar: xGrammar
+	};
+})();
